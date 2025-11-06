@@ -1,0 +1,143 @@
+ChatContainer.tsx
+
+interface ChatContainerProps {
+  onGenerateDashboard: () => void;
+}
+
+const ChatContainer: React.FC<ChatContainerProps> = ({ onGenerateDashboard }) => {
+  return (
+    <main className="flex-1 flex flex-col bg-chat-gradient-light dark:bg-chat-gradient-dark">
+      <header className="flex justify-between items-center p-4">
+        <h2 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
+          IkusAI Chat
+        </h2>
+      </header>
+
+      {/* Chat Content */}
+      <div className="flex-1 px-6 pb-6 space-y-6 overflow-y-auto">
+        {/* Tus mensajes del chat aquí */}
+        <div className="text-center my-4">
+          <span className="text-xs font-semibold text-light-text-secondary dark:text-dark-text-secondary bg-gray-100 dark:bg-zinc-800 rounded-full px-3 py-1">
+            Hoy
+          </span>
+        </div>
+      </div>
+
+      {/* Chat Footer con botones */}
+      <div className="p-4 border-t border-light-border dark:border-dark-border bg-background-light dark:bg-background-dark">
+        <div className="w-full max-w-3xl mx-auto">
+          <div className="flex gap-4 justify-center mb-4">
+            <button
+              onClick={onGenerateDashboard}
+              className="flex items-center gap-2 py-2 px-4 bg-emerald-50 dark:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 rounded-lg shadow-sm hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors text-emerald-700 dark:text-emerald-300"
+            >
+              <span className="material-icons text-base text-emerald-500 dark:text-emerald-400">
+                dashboard
+              </span>
+              Generar Dashboard
+            </button>
+          </div>
+
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Type your message here..."
+              className="w-full py-3 pl-4 pr-12 rounded-lg bg-white dark:bg-zinc-800 border border-light-border dark:border-dark-border focus:ring-2 focus:ring-primary/50 focus:border-primary transition-shadow"
+            />
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white hover:opacity-90 transition-opacity">
+              <span className="material-icons">send</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+export default ChatContainer;
+
+
+app.tsx
+
+import { useState } from "react";
+import ChatContainer from "./components/ChatContainer";
+import DashboardPanel from "./components/DashboardPanel";
+
+function App() {
+  const [showDashboard, setShowDashboard] = useState(false);
+
+  const handleToggleDashboard = () => {
+    setShowDashboard((prev) => !prev);
+  };
+
+  return (
+    <div className="flex h-screen transition-all duration-500 ease-in-out overflow-hidden">
+      {/* CHAT AREA */}
+      <div
+        className={`${
+          showDashboard
+            ? "w-0 opacity-0 -translate-x-full"
+            : "w-full opacity-100 translate-x-0"
+        } transition-all duration-500 ease-in-out`}
+      >
+        <ChatContainer onGenerateDashboard={handleToggleDashboard} />
+      </div>
+
+      {/* DASHBOARD AREA */}
+      <div
+        className={`${
+          showDashboard
+            ? "w-full opacity-100 translate-x-0"
+            : "w-0 opacity-0 translate-x-full"
+        } bg-background-light dark:bg-background-dark transition-all duration-500 ease-in-out overflow-hidden`}
+      >
+        <DashboardPanel onClose={handleToggleDashboard} />
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+dashboard 
+
+
+interface DashboardPanelProps {
+  onClose: () => void;
+}
+
+const DashboardPanel: React.FC<DashboardPanelProps> = ({ onClose }) => {
+  return (
+    <div className="flex flex-col w-full h-full p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
+          Dashboard
+        </h2>
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 py-2 px-4 bg-emerald-50 dark:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 rounded-lg shadow-sm hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors text-emerald-700 dark:text-emerald-300"
+        >
+          <span className="material-icons">arrow_back</span>
+          Volver al chat
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow overflow-y-auto">
+        <div className="bg-white dark:bg-zinc-900 border border-light-border dark:border-dark-border rounded-2xl shadow p-4">
+          <h3 className="font-semibold mb-2">Gráfico 1</h3>
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Aquí irá el primer gráfico o resumen.
+          </p>
+        </div>
+        <div className="bg-white dark:bg-zinc-900 border border-light-border dark:border-dark-border rounded-2xl shadow p-4">
+          <h3 className="font-semibold mb-2">Gráfico 2</h3>
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Aquí irá otro gráfico o componente visual.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardPanel;
